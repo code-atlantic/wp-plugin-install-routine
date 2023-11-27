@@ -14,13 +14,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Install
  *
- * @since 1.0.0
+ * @since 1.1.0
  */
 abstract class Installer {
 
 	/**
 	 * Option prefix.
-	 * 
+	 *
 	 * @var string
 	 */
 	const OPTION_PREFIX = 'plugin_prefix_';
@@ -94,15 +94,15 @@ abstract class Installer {
 	/**
 	 * Activate on single site.
 	 */
-	abstract public static function activate_site();
+	public static function activate_site() {}
 
 	/**
 	 * Deactivate on single site.
 	 */
-	abstract public static function deactivate_site();
+	public static function deactivate_site() {}
 
 	/**
 	 * Uninstall single site.
 	 */
-	abstract public static function uninstall_site();
+	public static function uninstall_site() {}
 }
