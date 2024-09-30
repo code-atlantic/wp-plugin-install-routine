@@ -70,7 +70,7 @@ abstract class Installer {
 			if ( count( $blog_ids ) > 2 ) {
 				ignore_user_abort( true );
 
-				if ( ! \ContentControl\is_func_disabled( 'set_time_limit' ) ) {
+				if ( ! self::is_func_disabled( 'set_time_limit' ) ) {
 					/* phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged */
 					@set_time_limit( 0 );
 				}
@@ -105,4 +105,19 @@ abstract class Installer {
 	 * Uninstall single site.
 	 */
 	public static function uninstall_site() {}
+
+	/**
+	 * Checks whether function is disabled.
+	 *
+	 * @param string $func Name of the function.
+	 *
+	 * @return bool Whether or not function is disabled.
+	 */
+	public static function is_func_disabled( $func ) {
+		$disabled_functions = ini_get( 'disable_functions' );
+	
+		$disabled = $disabled_functions ? explode( ',', $disabled_functions ) : [];
+	
+		return in_array( $func, $disabled, true );
+	}
 }
