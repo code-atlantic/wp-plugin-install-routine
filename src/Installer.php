@@ -31,7 +31,7 @@ abstract class Installer {
 	 * @param bool $network_wide Weather to activate network wide.
 	 */
 	public static function activate_plugin( $network_wide ) {
-		self::do_multisite( $network_wide, [ __CLASS__, 'activate_site' ] );
+		static::do_multisite( $network_wide, [ static::class, 'activate_site' ] );
 	}
 
 	/**
@@ -40,14 +40,14 @@ abstract class Installer {
 	 * @param bool $network_wide Weather to deactivate network wide.
 	 */
 	public static function deactivate_plugin( $network_wide ) {
-		self::do_multisite( $network_wide, [ __CLASS__, 'deactivate_site' ] );
+		static::do_multisite( $network_wide, [ static::class, 'deactivate_site' ] );
 	}
 
 	/**
 	 * Uninstall the plugin.
 	 */
 	public static function uninstall_plugin() {
-		self::do_multisite( true, [ __CLASS__, 'uninstall_site' ] );
+		static::do_multisite( true, [ static::class, 'uninstall_site' ] );
 	}
 
 	/**
@@ -61,7 +61,7 @@ abstract class Installer {
 		global $wpdb;
 
 		if ( is_multisite() && $network_wide ) {
-			$activated = get_site_option( self::OPTION_PREFIX . 'activated', [] );
+			$activated = get_site_option( static::OPTION_PREFIX . 'activated', [] );
 
 			/* phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery */
 			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
@@ -70,7 +70,7 @@ abstract class Installer {
 			if ( count( $blog_ids ) > 2 ) {
 				ignore_user_abort( true );
 
-				if ( ! self::is_func_disabled( 'set_time_limit' ) ) {
+				if ( ! static::is_func_disabled( 'set_time_limit' ) ) {
 					/* phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged */
 					@set_time_limit( 0 );
 				}
@@ -85,7 +85,7 @@ abstract class Installer {
 				restore_current_blog();
 			}
 
-			update_site_option( self::OPTION_PREFIX . 'activated', $activated );
+			update_site_option( static::OPTION_PREFIX . 'activated', $activated );
 		} else {
 			call_user_func_array( $method, [ $args ] );
 		}
